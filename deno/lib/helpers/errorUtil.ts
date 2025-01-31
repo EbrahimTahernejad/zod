@@ -1,7 +1,15 @@
 export namespace errorUtil {
-  export type ErrMessage = string | { message?: string };
+  export type ErrMessage = string | { message?: string } | (() => string);
   export const errToObj = (message?: ErrMessage) =>
-    typeof message === "string" ? { message } : message || {};
+    typeof message === "function"
+      ? { message: message() }
+      : typeof message === "string"
+      ? { message }
+      : message || {};
   export const toString = (message?: ErrMessage): string | undefined =>
-    typeof message === "string" ? message : message?.message;
+    typeof message === "function"
+      ? message()
+      : typeof message === "string"
+      ? message
+      : message?.message;
 }
